@@ -52,7 +52,20 @@ class EmployeeManager:
         else :
             print("\n Employees record")
             for emp in employees:
-                print("ID:{},\nName:{},\nSalary:{}".format(emp[0],emp[1],emp[2]))
+                print("ID:{},Name:{},Salary:{}".format(emp[0],emp[1],emp[2]))
+    def find_employee(self, empno):
+        """Find and display employee details by empno (id)."""
+        self.cursor.execute("SELECT * FROM employees WHERE id = %s", (empno,))
+        emp = self.cursor.fetchone()
+
+        if emp:
+            print("\nEmployee Found:")
+            print(f"ID: {emp[0]}")
+            print(f"Name: {emp[1]}")
+            print(f"Salary: {emp[2]}")
+        else:
+            print("Employee not found!")
+
 
     def update_employee(self,empno,new_salary):
         self.cursor.execute("update employees set salary=%s where id=%s ",new_salary,empno)
@@ -82,9 +95,10 @@ while(True):
     print("-" * 40)
     print("1. Add Employee")
     print("2. View Employees")
-    print("3. Update Salary")
-    print("4. Delete Employee")
-    print("5. Exit")
+    print("3. Search Employee.")
+    print("4. Update Salary")
+    print("5. Delete Employee")
+    print("6. Exit")
     print("-" * 40)
 
     ch=int(input("Enter your choice   :"))
@@ -103,26 +117,41 @@ while(True):
         case 2:
             manager.view()
         case 3:
+            empno = int(input("Enter Employee Number to search: "))
+            manager.find_employee(empno)
+
+        case 4:
             try:
                 empno = int(input("Enter Employee Number to update salary: "))
                 new_salary = float(input("Enter new salary: "))
                 manager.update_employee(empno, new_salary)
             except ValueError:
                 print("Invalid input! Salary must be a number.")
-        case 4:
+        case 5:
             try:
                 empno = int(input("Enter Employee Number to delete: "))
                 manager.delete_employee(empno)
             except ValueError:
                 print("Invalid input! Employee number must be a number.")
 
-        case 5:
+        case 6:
             manager.close()
             print("Exiting... Goodbye!")
             break
 
         case _:
             print("Invalid choice! Please try again.")
+
+
+
+
+
+
+
+
+
+
+
 
 
 
